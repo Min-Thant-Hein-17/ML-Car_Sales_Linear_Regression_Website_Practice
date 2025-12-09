@@ -30,7 +30,7 @@ else:
 st.sidebar.markdown("---")
 
 # My Info
-st.sidebar.subheader("Presenter Information")
+st.sidebar.subheader("Owner's Information")
 st.sidebar.write(f"**Name:** Min Thant Hein")
 st.sidebar.write(f"**Student ID:** PIUS20230001")
 st.sidebar.write(f"**Contact Email:** minthanthein@parami.edu.mm ")
@@ -144,6 +144,7 @@ if predict_btn:
     except Exception as e:
         # Displaying an error message for the user
         st.error("We could not process your prediction at this time. Please check your inputs.")
+
 
 
 
