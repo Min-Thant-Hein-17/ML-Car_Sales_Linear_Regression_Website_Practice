@@ -134,7 +134,7 @@ if predict_btn:
         st.success("✅ Prediction Successful!")
         st.metric(label="Estimated Market Price", value=f"**${pred:,.0f}**")
         
-        # ➡️ ADDED: Link in the Main Body (using st.markdown)
+        # Adding the Link in the Main Body (using st.markdown)
         st.markdown("---")
         st.subheader("Stay Updated on Market Trends")
         st.markdown("For market validation, check the latest valuations at [Kelley Blue Book](https://www.kbb.com).")
@@ -144,6 +144,7 @@ if predict_btn:
     except Exception as e:
         # Display a generic error message for the user
         st.error("We could not process your prediction at this time. Please check your inputs.")
+
 
 
 
