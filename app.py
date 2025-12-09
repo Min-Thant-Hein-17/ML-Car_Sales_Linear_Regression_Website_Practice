@@ -6,7 +6,7 @@ import pickle
 import pandas as pd
 import streamlit as st
 
-# --- 1. Configuration & Setup ---
+#  1. Configuration & Setup 
 st.set_page_config(
     page_title="Car Price Predictor",
     page_icon="🚗",
@@ -14,7 +14,7 @@ st.set_page_config(
 )
 
 
-# --- 2. Sidebar for Personal/University Info & LINKS ---
+#  2. Sidebar for Personal/University Info & Links 
 # Content placed in st.sidebar will appear on the left side of the page.
 st.sidebar.title("🚗 Carl for Car Industries")
 
@@ -26,7 +26,7 @@ if logo_url and "example.com" not in logo_url:
 else:
     st.sidebar.subheader("Parami University")
 
-# Using st.sidebar.markdown() for dividers
+# Use st.sidebar.markdown() for dividers
 st.sidebar.markdown("---")
 
 # My Info
@@ -48,7 +48,7 @@ st.sidebar.markdown("**Industry News** from [Automotive News](https://www.autone
 st.sidebar.markdown("---")
 
 
-# --- 4. Utility: Load Model (Hidden from User) (Back-End) ---
+#  3. Utility: Load Model (Hidden from User) (Back-End) 
 @st.cache_resource
 def load_model(model_path: str):
     """Loads the trained scikit-learn pipeline."""
@@ -67,7 +67,7 @@ def load_model(model_path: str):
 MODEL_PATH = "linear_regression_pipeline.joblib"
 model = load_model(MODEL_PATH)
 
-# --- 5. Main Application Layout (User-Focused) (Front-End) ---
+#  4. Main Application Layout (User-Focused) (Front-End) 
 
 # Centering The Title Using Python Columns 
 col_left, col_center, col_right = st.columns([1, 3, 1])
@@ -96,7 +96,7 @@ with col2:
         index=0
     )
 with col3:
-    # Set a user-friendly range and step for the odometer
+    # Set a user-friendly range and step for the Odometer (KM)
     odometer_km = st.slider(
         "Mileage (KM)", 
         min_value=0,
@@ -111,26 +111,26 @@ with col4:
         index=2
     )
 
-# --- 6. Prediction Logic ---
+#  5. Prediction Logic 
 st.write("") 
 predict_btn = st.button("✨ Get Price Estimate", type="primary") 
 
 if predict_btn:
     try:
-        # Step 1: Feature Engineering
+        # Feature Engineering (Step 1)
         is_4_door = 1 if float(doors) == 4.0 else 0
 
-        # Step 2: Create the DataFrame required by the model
+        # Create the DataFrame required by the model (Step 2)
         input_data = {
             'Make': [make], 'Colour': [colour], 
             'Odometer (KM)': [float(odometer_km)], 'Is_4_Door': [is_4_door]
         }
         input_df = pd.DataFrame(input_data)
 
-        # Step 3: Make the prediction
+        # Make the prediction (Step 3)
         pred = model.predict(input_df)[0]
         
-        # Step 4: Display the result
+        # Display the result (Step 4)
         st.success("✅ Prediction Successful!")
         st.metric(label="Estimated Market Price", value=f"**${pred:,.0f}**")
         
@@ -142,9 +142,8 @@ if predict_btn:
         
 
     except Exception as e:
-        # Display a generic error message for the user
+        # Displaying an error message for the user
         st.error("We could not process your prediction at this time. Please check your inputs.")
-
 
 
 
