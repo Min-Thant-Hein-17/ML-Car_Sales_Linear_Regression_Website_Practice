@@ -127,8 +127,6 @@ if predict_btn:
             'Make': [make], 'Colour': [colour], 
             'Odometer (KM)': [float(odometer_km)], 'Is_4_Door': [is_4_door]
         }
-        input_df = pd.DataFrame(input_data)
-
 
         input_df = pd.DataFrame(input_data, columns=REQUIRED_COLUMNS)
 
@@ -150,6 +148,7 @@ if predict_btn:
     except Exception as e:
         # Displaying an error message for the user
         st.error("We could not process your prediction at this time. Please check your inputs.")
+
 
 
 
