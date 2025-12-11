@@ -111,52 +111,40 @@ with col4:
         index=2
     )
 
-#I fixed a bit right here, because when i made rerun again, model has a confusion in columns and column_transformer step!
-#So, I made a clarification by adding "REQUIRED_COLUMNS" variable with the exact names of the required columns! 
-#By doing this, model will not be having confusion error of the columns in the long run!
 
-#  5. Prediction Logic 
-st.write("") 
-predict_btn = st.button("✨ Get Price Estimate", type="primary") 
+#  5. Prediction Logic 
+st.write("") 
+predict_btn = st.button("✨ Get Price Estimate", type="primary") 
 
 if predict_btn:
-    try:
-        # Define the required column order explicitly for safety
-        # This order MUST match the original X DataFrame used for training!
-        REQUIRED_COLUMNS = ['Make', 'Colour', 'Odometer (KM)', 'Is_4_Door']
+    try:
+        # Feature Engineering (Step 1)
+        is_4_door = 1 if float(doors) == 4.0 else 0
 
-        # 1. Feature Engineering 
-        is_4_door = 1 if float(doors) == 4.0 else 0
+        # Create the DataFrame required by the model (Step 2)
+        input_data = {
+            'Make': [make], 'Colour': [colour], 
+            'Odometer (KM)': [float(odometer_km)], 'Is_4_Door': [is_4_door]
+        }
+        input_df = pd.DataFrame(input_data)
 
-        # 2. Create the input data dictionary (without lists for single row)
-        input_data_row = {
-            'Make': make, 
-            'Colour': colour, 
-            'Odometer (KM)': float(odometer_km), 
-            'Is_4_Door': is_4_door
-        }
+        # Make the prediction (Step 3)
+        pred = model.predict(input_df)[0]
         
-        # 3. Create the DataFrame, forcing the correct column order
-        input_df = pd.DataFrame([input_data_row], columns=REQUIRED_COLUMNS)
+        # Display the result (Step 4)
+        st.success("✅ Prediction Successful!")
+        st.metric(label="Estimated Market Price", value=f"**${pred:,.0f}**")
+        
+        # Adding the Link in the Main Body (using st.markdown)
+        st.markdown("---")
+        st.subheader("Stay Updated on Market Trends")
+        st.markdown("For market validation, check the latest valuations at [Kelley Blue Book](https://www.kbb.com).")
+        st.markdown("---")
+        
 
-        # Make the prediction (Step 3)
-        pred = model.predict(input_df)[0]
-        
-        # Display the result (Step 4)
-        st.success("✅ Prediction Successful!")
-        st.metric(label="Estimated Market Price", value=f"**${pred:,.0f}**")
-        
-        # Adding the Link in the Main Body (using st.markdown)
-        st.markdown("---")
-        st.subheader("Stay Updated on Market Trends")
-        st.markdown("For market validation, check the latest valuations at [Kelley Blue Book](https://www.kbb.com).")
-        st.markdown("---")
-        
+    except Exception as e:
+        # Displaying an error message for the user
+        st.error("We could not process your prediction at this time. Please check your inputs.")
 
-    except Exception as e:
-        # Displaying an error message for the user
-        st.error("We could not process your prediction at this time. Please check your inputs.")
-        # Optional: Print the full error to the console for debugging
-        print(f"Prediction Crash Error: {e}")
 
 
