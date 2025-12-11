@@ -1,5 +1,5 @@
 # app.py
-# Simplified and Userfriendly website with University and Student Info
+# Simple and Userfriendly website with University and Student Info
 
 import os
 import pickle
@@ -145,6 +145,7 @@ if predict_btn:
     except Exception as e:
         # Displaying an error message for the user
         st.error("We could not process your prediction at this time. Please check your inputs.")
+
 
 
 
