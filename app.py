@@ -122,16 +122,16 @@ if predict_btn:
         # Feature Engineering (Step 1)
         is_4_door = 1 if float(doors) == 4.0 else 0
 
-        # Create the DataFrame required by the model (Step 2)# Create the input data row as a list (the values must be in the order of REQUIRED_COLUMNS!)
-        input_data_values = [
-            make, 
-            colour, 
-            float(odometer_km), 
-            is_4_door
-        ]
+        # Create the input data dictionary where values are lists (for a single row)
+        input_data = {
+            'Make': [make], 
+            'Colour': [colour], 
+            'Odometer (KM)': [float(odometer_km)], 
+            'Is_4_Door': [is_4_door]
+        }
         
-        # Create the DataFrame (Step 2), wrapping the values in another list [[]] for a single row
-        input_df = pd.DataFrame([input_data_values], columns=REQUIRED_COLUMNS)
+        # Create the DataFrame (Step 2), using the dictionary and enforcing the required order
+        input_df = pd.DataFrame(input_data, columns=REQUIRED_COLUMNS)        
         
         # Make the prediction (Step 3)
         pred = model.predict(input_df)[0]
@@ -150,6 +150,7 @@ if predict_btn:
     except Exception as e:
         # Displaying an error message for the user
         st.error("We could not process your prediction at this time. Please check your inputs.")
+
 
 
 
