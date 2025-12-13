@@ -1,5 +1,5 @@
 # app.py
-# Simple and Userfriendly website with University and Student Info
+# Simplified and Userfriendly website with University and Student Info
 
 import os
 import joblib
@@ -48,21 +48,19 @@ st.sidebar.markdown("**Industry News** from [Automotive News](https://www.autone
 st.sidebar.markdown("---")
 
 
-#  3. Utility: Load Model (Hidden from User) (Back-End) 
+#  3. Load Model (Hidden from User) (Back-End) 
 @st.cache_resource
 def load_model(model_path: str):
     """Loads the trained scikit-learn pipeline."""
     if not os.path.exists(model_path):
-        st.error("Prediction service is currently unavailable. Model file not found.")
+        st.error("Prediction service is currently unavailable. Please contact the administrator.")
         st.stop()
     try:
-        # Use joblib.load for .joblib files
-        model = joblib.load(model_path)
+        with open(model_path, "rb") as f:
+            model = joblib.load(f)
         return model
     except Exception as e:
         st.error("Prediction service is currently unavailable due to a model loading error.")
-        # Show the actual exception to help you debug
-        st.exception(e)
         st.stop()
 
 # Load the model pipeline
@@ -113,54 +111,39 @@ with col4:
         index=2
     )
 
-
 #  5. Prediction Logic 
 st.write("") 
 predict_btn = st.button("✨ Get Price Estimate", type="primary") 
 
-
 if predict_btn:
     try:
-        REQUIRED_COLUMNS = ['Make', 'Colour', 'Odometer (KM)', 'Is_4_Door']
+        # Feature Engineering (Step 1)
+        is_4_door = 1 if float(doors) == 4.0 else 0
 
-        is_4_door = 1 if int(doors) == 4 else 0  # simpler & explicit int compare
-
+        # Create the DataFrame required by the model (Step 2)
         input_data = {
-            'Make': [make],
-            'Colour': [colour],
-            'Odometer (KM)': [float(odometer_km)],
-            'Is_4_Door': [is_4_door]
+            'Make': [make], 'Colour': [colour], 
+            'Odometer (KM)': [float(odometer_km)], 'Is_4_Door': [is_4_door]
         }
+        input_df = pd.DataFrame(input_data)
 
-        input_df = pd.DataFrame(input_data, columns=REQUIRED_COLUMNS)
-
-        # Optional: Inspect dtypes to ensure they match training expectations
-        st.write("Debug – input dtypes:", input_df.dtypes)
-
+        # Make the prediction (Step 3)
         pred = model.predict(input_df)[0]
-
+        
+        # Display the result (Step 4)
         st.success("✅ Prediction Successful!")
-        # st.metric expects a plain value; avoid markdown here
-        st.metric(label="Estimated Market Price", value=f"${pred:,.0f}")
-
+        st.metric(label="Estimated Market Price", value=f"**${pred:,.0f}**")
+        
+        # Adding the Link in the Main Body (using st.markdown)
         st.markdown("---")
         st.subheader("Stay Updated on Market Trends")
-        st.markdown("For market validation, check the latest valuations at Kelley Blue Book.")
+        st.markdown("For market validation, check the latest valuations at [Kelley Blue Book](https://www.kbb.com).")
         st.markdown("---")
+        
 
     except Exception as e:
+        # Displaying an error message for the user
         st.error("We could not process your prediction at this time. Please check your inputs.")
-        # Show the real error while debugging
-        st.exception(e)
-
-
-
-
-
-
-
-
-
 
 
 
