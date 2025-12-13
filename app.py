@@ -57,7 +57,7 @@ def load_model(model_path: str):
         st.stop()
     try:
         with open(model_path, "rb") as f:
-            model = pickle.load(f)
+            model = joblib.load(f)
         return model
     except Exception as e:
         st.error("Prediction service is currently unavailable due to a model loading error.")
@@ -150,6 +150,7 @@ if predict_btn:
     except Exception as e:
         # Displaying an error message for the user
         st.error("We could not process your prediction at this time. Please check your inputs.")
+
 
 
 
