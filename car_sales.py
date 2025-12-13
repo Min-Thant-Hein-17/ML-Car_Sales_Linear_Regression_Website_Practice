@@ -1,5 +1,5 @@
 import streamlit as st 
-import pickle
+import joblib
 import os
 import pandas as pd
 import numpy as np
@@ -107,6 +107,6 @@ print("------------------------------")
 # Save the entire trained pipeline object using pickle
 model_save_path = 'linear_regression_pipeline.joblib'
 with open(model_save_path, 'wb') as f:
-    pickle.dump(model_pipeline, f)
+    joblib.dump(model_pipeline, f)
 
-print(f"\nPipeline successfully saved to '{model_save_path}' using pickle.")
+print(f"\nPipeline successfully saved to '{model_save_path}' using joblib.")
